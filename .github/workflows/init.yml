@@ -9,26 +9,28 @@ jobs:
     steps:
       - uses: hmarr/debug-action@v2
       - uses: actions/checkout@v2
-      - run: |
-          USER=${{ github.event.repository.owner.login }}
-          REPO=${{ github.event.repository.name }}
-          find .bach/ -type f -exec sed -i 's/bach-library-template/$REPO/g' {} \;
-          find .bach/ -type f -exec sed -i 's/com.github.sormuras.library/com.github.$USER.$REPO/g' {} \;
-          find .idea/ -type f -exec sed -i 's/bach-library-template/$REPO/g' {} \;
-          find .idea/ -type f -exec sed -i 's/com.github.sormuras.library/com.github.$USER.$REPO/g' {} \;
-          find com.github.sormuras.library/ -type f -exec sed -i 's/bach-library-template/$REPO/g' {} \;
-          find com.github.sormuras.library/ -type f -exec sed -i 's/com.github.sormuras.library/com.github.$USER.$REPO/g' {} \;
-          find test.base/ -type f -exec sed -i 's/bach-library-template/$REPO/g' {} \;
-          find test.base/ -type f -exec sed -i 's/com.github.sormuras.library/com.github.$USER.$REPO/g' {} \;
+      - name: 'Rename files and directories'
+        run: |
+          export USER=${{ github.event.repository.owner.login }}
+          export REPO=${{ github.event.repository.name }}
+          find .bach/ -type f -exec sed -i "s/bach-library-template/$REPO/g" {} \;
+          find .bach/ -type f -exec sed -i "s/com.github.sormuras.library/com.github.$USER.$REPO/g" {} \;
+          find .idea/ -type f -exec sed -i "s/bach-library-template/$REPO/g" {} \;
+          find .idea/ -type f -exec sed -i "s/com.github.sormuras.library/com.github.$USER.$REPO/g" {} \;
+          find com.github.sormuras.library/ -type f -exec sed -i "s/bach-library-template/$REPO/g" {} \;
+          find com.github.sormuras.library/ -type f -exec sed -i "s/com.github.sormuras.library/com.github.$USER.$REPO/g" {} \;
+          find test.base/ -type f -exec sed -i "s/bach-library-template/$REPO/g" {} \;
+          find test.base/ -type f -exec sed -i "s/com.github.sormuras.library/com.github.$USER.$REPO/g" {} \;
           mv .idea/bach-library-template.iml .idea/$REPO.iml
           mv .idea/com.github.sormuras.library.iml .idea/com.github.$USER.$REPO.iml
           mv com.github.sormuras.library/main/java/com/github/sormuras/library com.github.sormuras.library/main/java/com/github/sormuras/$REPO
           mv com.github.sormuras.library/main/java/com/github/sormuras com.github.sormuras.library/main/java/com/github/$USER
           mv com.github.sormuras.library com.github.$USER.$REPO
           rm .github/workflows/init.yml
-      - run: |
+      - name: 'Commit and push changes'
+        run: |
           git config user.name github-actions
           git config user.email github-actions@github.com      
           git add .
-          git commit -m "Adjust names"
+          git commit -m "Rename files and directories"
           git push origin main
