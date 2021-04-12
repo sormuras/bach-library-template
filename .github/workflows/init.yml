@@ -1,0 +1,12 @@
+name: Created
+
+on: 
+  create:
+  workflow_dispatch:
+
+jobs:
+  init:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: hmarr/debug-action@v2
+      - uses: actions/checkout@v2
