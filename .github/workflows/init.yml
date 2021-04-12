@@ -2,6 +2,7 @@ name: init
 
 on:
   create:
+  workflow_dispatch:
 
 jobs:
   init:
