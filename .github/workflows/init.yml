@@ -12,10 +12,11 @@ jobs:
       - run: |
           USER=${{ github.event.repository.owner.login }}
           REPO=${{ github.event.repository.name }}
-          rename .idea/bach-library-template.iml .idea/$REPO.iml
-          rename .idea/com.github.sormuras.library.iml .idea/com.github.$USER.$REPO.iml
-          rename com.github.sormuras.library/main/java/com/github/sormuras/library com.github.sormuras.library/main/java/com/github/$USER/$REPO
-          rename com.github.sormuras.library com.github.$USER.$REPO
+          mv .idea/bach-library-template.iml .idea/$REPO.iml
+          mv .idea/com.github.sormuras.library.iml .idea/com.github.$USER.$REPO.iml
+          mv com.github.sormuras.library/main/java/com/github/sormuras/library com.github.sormuras.library/main/java/com/github/sormuras/$REPO
+          mv com.github.sormuras.library/main/java/com/github/sormuras com.github.sormuras.library/main/java/com/github/$USER
+          mv com.github.sormuras.library com.github.$USER.$REPO
           find ./ -type f -exec sed -i 's/bach-library-template/$REPO/g' {} \;
           find ./ -type f -exec sed -i 's/com.github.sormuras.library/com.github.$USER.$REPO/g' {} \;
           rm .github/workflows/init.yml
