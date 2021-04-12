@@ -1,8 +1,6 @@
-name: Created
+name: init
 
-on: 
-  create:
-  workflow_dispatch:
+on: create
 
 jobs:
   init:
@@ -10,3 +8,10 @@ jobs:
     steps:
       - uses: hmarr/debug-action@v2
       - uses: actions/checkout@v2
+      - run: echo "New file" > NEW.txt
+      - run: sed "s/bach-library-template/${{ github.event.repository.name }}/g" README.md
+      - run: rm .github/workflows/init.yml
+      - run: |
+          git add .
+          git commit -m "Initialized"
+          git push origin main
