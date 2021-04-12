@@ -1,6 +1,7 @@
 name: init
 
-on: create
+on:
+  create:
 
 jobs:
   init:
