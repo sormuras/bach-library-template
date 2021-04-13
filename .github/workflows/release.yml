@@ -1,0 +1,40 @@
+name: release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag-version:
+        description: 'Tag as version'
+        required: true
+        default: '1-ea'
+      pre-release:
+        description: 'Pre-release? [true|false]'
+        required: true
+        default: 'true'
+
+env:
+  VERSION: ${{ github.event.inputs.tag-version }}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Check out sources'
+        uses: actions/checkout@v2
+      - name: 'Set up JDK'
+        uses: actions/setup-java@v2
+        with:
+          java-version: 16
+          distribution: 'zulu'
+      - name: 'Build with Bach'
+        uses: sormuras/bach-build@v1
+        with:
+          bach-arguments: --project-version ${{ env.VERSION }} build
+      - name: 'Release ${{ env.VERSION }}'
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          automatic_release_tag: ${{ env.VERSION }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          prerelease: ${{ github.event.inputs.pre-release }}
+          title: 'Release ${{ env.VERSION }}'
+          files: .bach/workspace/modules/*.jar
